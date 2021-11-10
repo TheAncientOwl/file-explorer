@@ -1,27 +1,26 @@
 import { useState, useMemo } from 'react';
 import { FilesViewer } from './FilesViewer';
 
-const fs = require('fs');
-const pathModule = require('path');
-
 const formatSize = size => {
   const i = Math.floor(Math.log(size) / Math.log(1024));
   return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 };
 
+const { readdirSync, fileStatsSync, joinPath, startLocation, dirname } = window.electronAPI;
+
 const App = () => {
-  const [path, setPath] = useState();
+  const [path, setPath] = useState(startLocation);
 
   const files = useMemo(
     () =>
-      fs
-        .readdirSync(path)
+      readdirSync(path)
         .map(file => {
-          const stats = fs.statSync(pathModule.join(path, file));
+          const stats = fileStatsSync(joinPath(path, file));
+
           return {
             name: file,
-            size: stats.isFile() ? formatSize(stats.size ?? 0) : null,
-            directory: stats.isDirectory(),
+            size: stats.isFile ? formatSize(stats.size ?? 0) : null,
+            directory: stats.isDirectory,
           };
         })
         .sort((a, b) => {
@@ -33,8 +32,9 @@ const App = () => {
     [path]
   );
 
-  const handleBack = () => setPath(pathModule.dirname(path));
-  const handleOpen = folder => setPath(pathModule.join(path, folder));
+  const handleBack = () => setPath(dirname(path));
+  console.log(path);
+  const handleOpen = folder => setPath(joinPath(path, folder));
 
   const [searchString, setSearchString] = useState('');
   const filteredFiles = files.filter(s => s.name.startsWith(searchString));

@@ -1,12 +1,16 @@
 const { app, BrowserWindow } = require('electron');
-// require('@electron/remote/main').initialize();
+const path = require('path');
+
+console.log(__dirname);
 
 const createWindow = () => {
+  console.log(app.getAppPath());
   const window = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'electronAPI.js'),
     },
   });
 

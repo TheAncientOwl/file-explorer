@@ -16,7 +16,7 @@
     "concurrently": "^6.3.0",
     "react-scripts": "4.0.3"
   },
-  "main": "public/main.js",
+  "main": "electron/main.js",
   "homepage": "./",
   "scripts": {
     "start": "react-scripts start",

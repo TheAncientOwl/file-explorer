@@ -1,9 +1,9 @@
 import { IconFolder, IconFile, IconFolderOpen } from './Icons';
 
 export const FilesViewer = ({ files, onBack, onOpen }) => (
-  <table class='table'>
+  <table className='table'>
     <tbody>
-      <tr className='clickable' onClick={onBack}>
+      <tr className='clickable pointer' onClick={onBack}>
         <td className='icon-row'>
           <IconFolderOpen />
         </td>
@@ -11,9 +11,9 @@ export const FilesViewer = ({ files, onBack, onOpen }) => (
         <td></td>
       </tr>
 
-      {files.map(({ name, directory, size }) => {
+      {files.map(({ name, directory, size }, index) => {
         return (
-          <tr className='clickable' onClick={() => directory && onOpen(name)}>
+          <tr key={index} className={`clickable ${directory && 'pointer'}`} onClick={() => directory && onOpen(name)}>
             <td className='icon-row'>{directory ? <IconFolder /> : <IconFile />}</td>
             <td>{name}</td>
             <td>
